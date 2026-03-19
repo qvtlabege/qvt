@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Questionnaire agent baromètre</title>
+  <style>
+	  .logo {
+  display: block;
+ margin: 0 0 20px 0;
+		  
+  max-width: 80px;
+}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .question {https://github.com/LudovicLabege/mairie/blob/main/qvt%20avec%20question.htm
+      margin-bottom: 15px;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+	<img src="QVT_LOGO_NOIR.png"  class="logo">
+  <h1>Questionnaire agent baromètre</h1>
+  <form id="quizForm"></form>
+  <button id="submitBtn">Calculer</button>
+  <h2 id="resultat"></h2>
+
+  <script>
+	
+    const form = document.getElementById("quizForm");
+
+
+    const questions = [
+      "Dans mon travail, je dois apprendre des choses nouvelles?",
+      "Dans mon travail, j'effectue des tâches répétitives?",
+      "Mon travail me demande d'être créatif",
+      "Mon travail me permet souvent de prendre des décisions moi-même",
+      "Mon travail me demande un haut niveau de compétence",
+      "Dans ma tâche, j'ai très peu de liberté pour décider comment je fais mon travail",
+      "Dans mon travail, j'ai des activités variées",
+      "J'ai la posibilité d'influencer le déroulement de mon travail",
+      "J'ai l'occasion de développer mes compétences professionnelles",
+      "Mon travail me demande de travailler très vite",
+      "Mon travail demande de travailler intensément",
+      "On me demande d'effectuer une quantité de travail excessive",
+      "Je dispose du temps nécessaire pour effectuer correctement mon travail",
+      "Je reçois des ordres contradictoires de la part d'autres personnes",
+      "Mon travail nécessite de longues périodes de concentration intense",
+      "Mes tâches sont souvent interrompues avant d'être achevées, nécessitant de les reprendre plus tard",
+      "Mon travail est très bousculé",
+      "Attendre le travail de collègues ralentit souvent mon propre travail",
+      "Mon supérieur se sent concerné par le bien-être de ses subourdonnés",
+      "Mon supérieur prête attention à ce que je dis",
+      "Mon supérieur m'aide à mener ma tâche à bien",
+      "Mon supérieur réussit facilement à faire collaborer ses subordonnés",
+      "Les collègues avec qui je travaille sont des gens professionnellement compétents",
+      "Les collègues avec qui je travaille me manifestent de l'intérêt",
+      "Les collègues avec qui je travaille sont amicaux",
+      "Les collègues avec qui je travaille m'aident à mener les tâches à bien",
+      "On me traite injustement dans mon travail",
+      "Ma sécurité d'emploi est menacée",
+      "Ma position professionnelle actuelle correspond bien à ma formation",
+      "Vu tous les efforts, je reçois le respect et l'estime que je mérite à mon travail",
+      "Vu tous les efforts, mes perspectives de promotion sont satisfaisantes",
+      "Vu tous les efforts, mon salaire est satisfaisant"
+    ];
+
+    // Génère les questions 4 à 35 (total 32 questions)
+    for (let i = 0; i < questions.length; i++) {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<p>${questions[i]}</p>
+        <label><input type="radio" name="q${i + 4}" value="1">Pas du tout d’accord</label><br>
+        <label><input type="radio" name="q${i + 4}" value="2">Pas d’accord</label><br>
+        <label><input type="radio" name="q${i + 4}" value="3">D’accord</label><br>
+        <label><input type="radio" name="q${i + 4}" value="4">Tout à fait d’accord</label>`;
+      form.appendChild(div);
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", function(event) {
+      event.preventDefault();
+
+      const valeurs = [];
+
+      for (let i = 4; i <= 35; i++) {
+        const choix = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!choix) {
+          alert(`Merci de répondre à la question ${i}.`);
+          return;
+        }
+        valeurs.push(parseInt(choix.value));
+      }
+
+      const q = valeurs; // q[0] = question4, q[1] = question5, ..., q[31] = question35
+
+      // Calculs
+      const ad = 4 * (q[3] + (5 - q[5]) + q[7]); // question7, (5 - question9), question11
+      const uc = 2 * (q[0] + (5 - q[1]) + q[2] + q[4] + q[6] + q[8]); // question4, 5, 6, 8, 10, 12
+      const dp = q[9] + q[10] + q[11] + (5 - q[12]) + q[13] + q[14] + q[15] + q[16] + q[17]; // 
+      const ssph = q[18] + q[19] + q[20] + q[21]; // question22 → question25
+      const sspc = q[22] + q[23] + q[24] + q[25]; // question26 → question29
+      const reconn = (5 - q[26]) + (5 - q[27]) + q[28] + q[29] + q[30] + q[31]; // 
+      const ld = ad + uc;
+      const ss = ssph + sspc; // approximation avec les 2 dernières questions
+	let message = "Résultats :\n";
+	
+
+
+
+      if (ld < 70 && dp >= 21) {
+        message=message+"SUJET STRESSÉ \n";
+      } else {
+    //     message=message+"SUJET NON STRESSÉ \n";
+      }
+
+      if (ld >= 70 && dp >= 21) {
+        message=message+"SUJET ACTIF \n";
+      } else {
+ //       message=message+"SUJET NON ACTIF \n";
+      }
+
+      if (ld < 70 && dp < 21) {
+        message=message+"SUJET PASSIF \n";
+      } else {
+  //      message=message+"SUJET NON PASSIF \n";
+      }
+
+      if (ld >= 70 && dp < 21) {
+        message=message+"SUJET DÉTENDU \n";
+      } else {
+//        message=message+"SUJET NON DÉTENDU \n";
+      }
+
+      if (ss > 24) {
+        message=message+"Sujet soutenu socialement \n";
+      } else {
+        message=message+"Sujet non soutenu socialement \n";
+      }
+
+      if (reconn <= 46) {
+        message=message+"Sujet non reconnu dans son travail \n";
+      } else {
+        message=message+"Sujet reconnu dans son travail  \n";
+      }	
+	
+    
+     alert(message);
+    });
+
+  </script>
+</body>
+</html>
+
