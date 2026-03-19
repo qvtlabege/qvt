@@ -90,7 +90,7 @@
       for (let i = 4; i <= 35; i++) {
         const choix = document.querySelector(`input[name="q${i}"]:checked`);
         if (!choix) {
-          alert(`Merci de répondre à la question ${i}.`);
+          alert(`Merci de répondre à toutes les questions`);
           return;
         }
         valeurs.push(parseInt(choix.value));
